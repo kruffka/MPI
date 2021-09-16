@@ -106,7 +106,7 @@ int decode_bint(char *bint_e){
     int len = strlen(bint_e);
     int x = 0;
     for(int i = 0; i < len; i++){
-        if(bint_e[i] == '1')
+        if(bint_e[len - i - 1] == '1')
             x += (1 << i);
     }
     // '1' in the beginning
@@ -144,14 +144,10 @@ int decode_f1(char *encoded){
             return 0;
         }
 
-        printf("k = %d\n", k);
-        
         for(i = 0; i < k - 1; i++){
             bint_d[i] = encoded[i + k + 1];
         }
-        printf("bint_d = %s\n", bint_d);
         x = decode_bint(bint_d);
-        printf("x = %d\n", x);
 
         symbols = symbols - k - i;
 
@@ -165,25 +161,56 @@ int decode_f1(char *encoded){
 }
 
 
-char *decode_f2(char *encoded){
+void decode_f2(char *encoded){
 
-    char *f2_d = (char *)malloc(strlen(encoded));
-    
-    int i = 0;
-    while(encoded[i] != '1'){
-        i++;
+    char *f2_d = (char *)malloc(128);
+    char *tmp = (char *)malloc(128);
+    strcpy(tmp, encoded);
+
+
+    int k = 0;
+    for(int i = 0; i < strlen(tmp); i++){
+        f2_d[i] = tmp[i];
+        k++;
+
+        // searching first '1'
+        if(tmp[i] == '1'){
+            k += k - 2; // num of 000 and 1 - 2 ('0' & '1')
+
+            for(int j = i; j < k; j++){
+                f2_d[j] = tmp[j];
+            }
+            f2_d[k] == '\0';
+
+            int bin_mod = decode_f1(f2_d);
+            
+            for(int m = 0; m < bin_mod; m++){
+                f2_d[m] = tmp[m+k];
+            }
+            f2_d[bin_mod - 1] = '\0';
+            printf("%d ", decode_bint(f2_d));
+            
+            // printf("\n k = %d\n", k);
+            // printf("%s\n", tmp);
+            // printf("k = %d bin_mod = %d\n", k, bin_mod);
+            // strcpy(f2_d, tmp);
+            strcpy(tmp, tmp + k + bin_mod - 1);
+            // printf("%s\n", tmp);
+            // return;
+            k = 0;
+            i = -1;
+            // return decode_bint(f2_d);
+            // break;
+        }
     }
-
-
-
-
-    return encoded;
+    
+   // return encoded;
 
 }
 
 
 
-void main(void){
+void main(int argc, char *argv[]){
 
     
     // for(int i = 0; i < 10; i++){
@@ -194,17 +221,22 @@ void main(void){
     //     printf("f2 = %d %s\n", i, f2(i));
     // }
 
-    int a[3] = {3, 5, 4};
+    //int a[3] = {2, 5, 4};
 
 
     char *str = (char *)malloc(128);
     char *ptr;
 
-    printf("Input:\n");
-    for(int i = 0; i < 3; i++){
-        printf("%d ", a[i]);
+    if(argc < 2){
+        printf("Give me numbers..\n");
+        exit(0);
+    }
 
-        ptr = f2(a[i]);        
+    printf("Input:\n");
+    for(int i = 1; i < argc; i++){
+        printf("%d ", atoi(argv[i]));
+
+        ptr = f2(atoi(argv[i]));        
         stpcpy(str + strlen(str), ptr);
 
     }printf("\n");
@@ -212,10 +244,18 @@ void main(void){
     printf("Encoded str = %s\n", str);
 
     printf("Decoding now...\n");
-    
-    // printf("\t f2 = %s\n", decode_f2(str));
 
-    printf("f_d = %d\n", decode_f1("00001000"));
+    decode_f2(str);
+
+    printf("\n");
+
+// char s[] = "some string";
+// strcpy(s, s + 5);
+// s[4] = '\0';
+// printf("str = %s\n", s);
+    // printf("f2 = %d\n", decode_f2(str));
+
+    //printf("f_d = %d\n", decode_f2("000100011"));
 
 
 
