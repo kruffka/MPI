@@ -163,8 +163,8 @@ int decode_f1(char *encoded){
 
 void decode_f2(char *encoded){
 
-    char *f2_d = (char *)malloc(128);
-    char *tmp = (char *)malloc(128);
+    char *f2_d = (char *)malloc(64); // |bin(MAX_INT)| = 40
+    char *tmp = (char *)malloc(strlen(encoded));
     strcpy(tmp, encoded);
 
 
@@ -224,7 +224,7 @@ void main(int argc, char *argv[]){
     //int a[3] = {2, 5, 4};
 
 
-    char *str = (char *)malloc(128);
+    char *str = (char *)malloc(64*argc); // |bin(MAX_INT)| = 40
     char *ptr;
 
     if(argc < 2){
