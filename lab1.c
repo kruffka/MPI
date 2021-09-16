@@ -81,6 +81,10 @@ char *f1(int x){
     strcpy(f1_c, f0_c);
     stpcpy(f1_c + strlen(bint_c) + 2, bint_c);
 
+    // free(bint_c);
+    // free(bin_c);
+    // free(f0_c);
+
     return f1_c;
 
 }
@@ -96,7 +100,11 @@ char *f2(int x){
     char *f2_c = (char *)malloc(strlen(f1_c) + strlen(bint_c));
     strcpy(f2_c, f1_c);
     stpcpy(f2_c + strlen(f2_c), bint_c);
-    
+
+    // free(bint_c);
+    // free(bin_c);
+    // free(f1_c);
+
     return f2_c;
 }
 
@@ -153,7 +161,8 @@ int decode_f1(char *encoded){
 
     // }   
     
-
+    free(f0_d);
+    free(bint_d);
 
 
     return x;
@@ -205,6 +214,8 @@ void decode_f2(char *encoded){
     }
     
    // return encoded;
+   free(tmp);
+   free(f2_d);
 
 }
 
