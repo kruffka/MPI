@@ -186,6 +186,11 @@ void decode_f2(char *encoded){
         if(tmp[i] == '1'){
             k += k - 2; // num of 000 and 1 - 2 ('0' & '1')
 
+            if(k == 0){ // decode 0
+                printf("0 ");
+                continue;
+            }
+
             for(int j = i; j < k; j++){
                 f2_d[j] = tmp[j];
             }
@@ -199,17 +204,11 @@ void decode_f2(char *encoded){
             f2_d[bin_mod - 1] = '\0';
             printf("%d ", decode_bint(f2_d));
             
-            // printf("\n k = %d\n", k);
-            // printf("%s\n", tmp);
-            // printf("k = %d bin_mod = %d\n", k, bin_mod);
-            // strcpy(f2_d, tmp);
             strcpy(tmp, tmp + k + bin_mod - 1);
-            // printf("%s\n", tmp);
-            // return;
+
             k = 0;
             i = -1;
-            // return decode_bint(f2_d);
-            // break;
+            
         }
     }
     
@@ -222,18 +221,6 @@ void decode_f2(char *encoded){
 
 
 void main(int argc, char *argv[]){
-
-    
-    // for(int i = 0; i < 10; i++){
-    //   printf("%d %s\n", i, bin(i));
-    // }
-    
-    // for(int i = 0; i < 9; i++){
-    //     printf("f2 = %d %s\n", i, f2(i));
-    // }
-
-    //int a[3] = {2, 5, 4};
-
 
     char *str = (char *)malloc(64*argc); // |bin(MAX_INT)| = 40
     char *ptr;
@@ -259,15 +246,5 @@ void main(int argc, char *argv[]){
     decode_f2(str);
 
     printf("\n");
-
-// char s[] = "some string";
-// strcpy(s, s + 5);
-// s[4] = '\0';
-// printf("str = %s\n", s);
-    // printf("f2 = %d\n", decode_f2(str));
-
-    //printf("f_d = %d\n", decode_f2("000100011"));
-
-
 
 }
