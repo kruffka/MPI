@@ -23,29 +23,89 @@ uint8_t stackOfBooks(uint8_t byte){
 }
 
 void main(void){
+    char filename[] = "1";
+    char books_file[] = "stackOfBooks_f2";
 
     FILE *file;
     
-    file = fopen("1", "rb"); //doge.png
+    file = fopen(filename, "rb"); //doge.png
 
     if(file == NULL){
         printf("Can't open file\n");
         exit(0);
     }
 
-    int byte;
-    int i = 0;
-    uint8_t code = 0;
-    printf("Reading file\n");
-    while ((byte = getc(file)) != EOF) {
+    FILE *file1;
+    file1 = fopen(books_file, "wb"); // rewrite
 
-        code = stackOfBooks(byte);
-        printf("ch[%d] = %x code %d f2 %s\n", i, byte, code, f2(code));
-        i++;
+    int byte;
+    uint8_t code = 0;
+    unsigned char hex = 0;
+    char f2_bin[256];
+    uint8_t remainder = 0;
+    printf("Reading file\n");
+    
+    while (byte != EOF) {
+        
+        if (remainder < 8) {
+            byte = getc(file);
+            code = stackOfBooks(byte);
+            strcpy(f2_bin + remainder, f2(code));
+            remainder = strlen(f2_bin);
+            // printf("byte = %x code %d f2 %s strlen %d codef2 %s\n", byte, code, f2_bin, strlen(f2_bin), f2(code));
+      
+        } else { 
+            remainder -= 8; // f2_bin > 8 bit
+
+            // 00011010|001 00011| 010010 00| 0100100 0|
+            //    11010|001 00011| 010010 00| 0100100 0|
+            hex = 0;
+            for(int i = 0; i < 8; i++) {
+                hex |= (f2_bin[7 - i] & 1) << i;
+            }
+            strcpy(f2_bin, f2_bin + 8);
+            printf("*** hex = %x f2_bin = %s\n", hex, f2_bin);
+            fprintf(file1, "%x", hex);
+        }
+        // printf("######## remainder = %d\n", remainder);
+        
+        
+        // i++;
     }
-    printf("Done\n");
+
+    // idk 
+    remainder -= 15;
+
+    if(remainder > 0) {
+
+        for(int i = remainder; i < 8; i++){
+            f2_bin[i] = '0';
+        }
+
+        for(int i = 0; i < 8; i++)
+                hex |= (f2_bin[7 - i] & 1) << i;
+        
+        // printf("ch[] = code %d f2 %s codef2 %s remainder %d\n", code, f2_bin, f2(code), remainder);
+        // printf("hex = %x f2_bin = %s\n", hex, f2_bin);
+  
+        fprintf(file1, "%x", hex);
+    }
+
+    printf("Done encoding, encoded file: %s\n", books_file);
     
+    fclose(file);
+    fclose(file1);
+
+    // printf("f2(%d) %s\n", 32, f2(32));
     
+    // file = fopen(books_file, "rb");
+    // while ((byte = getc(file)) != EOF) {
+
+    //     // code = stackOfBooks(byte);
+    //     printf("ch[%d] = %x\n", i, byte);
+    //     // fprintf(file1, "%s", f2(code));
+    //     i++;
+    // }
     //debug
     // for(int i = 0; i < 256; i++){
     //     code = stackOfBooks(i);
@@ -53,7 +113,6 @@ void main(void){
     // }
     
 
-    fclose(file);
+   
 
-    
 }
