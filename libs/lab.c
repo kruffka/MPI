@@ -188,11 +188,14 @@ int decode_f2(char *encoded){
             if(k == 0){ // decode 0
                 // printf("0 ");
 
-                // int zero = 0;
-                // for(zero = 0; i < strlen(tmp)-1; zero++){
-                //     // encoded[zero] = encoded[zero+1];
-                // }
-                // encoded[zero] = '\0';
+                int zero = 0;
+                for(; zero < strlen(tmp)-1; zero++){
+                    encoded[zero] = encoded[zero+1];
+                }
+                // encoded += 1;
+                encoded[strlen(tmp)-1] = '\0';
+                free(tmp);
+                free(f2_d);
                 return 0;
 
                 // printf("0 ");
@@ -215,10 +218,10 @@ int decode_f2(char *encoded){
             // for stackofbooks lab2
             #if 1
                 //encoded = tmp;
-                for(int i = 0; i < k + bin_mod - 1; i++){
+                for(int i = 0; i < strlen(tmp); i++){
                     encoded[i] = tmp[i];
                 }
-                encoded[k+bin_mod] = '\0';
+                encoded[strlen(tmp)] = '\0';
                 // strcpy(tmp, tmp + k + bin_mod - 1);
                 int ans = decode_bint(f2_d);
                 // printf("ans = %d %s\n", ans, encoded);
@@ -235,9 +238,11 @@ int decode_f2(char *encoded){
         }
     }
     
-   // return encoded;
-   free(tmp);
-   free(f2_d);
+    free(tmp);
+    free(f2_d);
+
+    return -1;
+
 
 }
 
