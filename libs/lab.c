@@ -1,4 +1,7 @@
-#include "lab.h"
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 
 char *bin(int x){
 
@@ -167,7 +170,7 @@ int decode_f1(char *encoded){
 }
 
 
-void decode_f2(char *encoded){
+int decode_f2(char *encoded){
 
     char *f2_d = (char *)malloc(64); // |bin(MAX_INT)| = 40
     char *tmp = (char *)malloc(strlen(encoded));
@@ -178,14 +181,22 @@ void decode_f2(char *encoded){
     for(int i = 0; i < strlen(tmp); i++){
         f2_d[i] = tmp[i];
         k++;
-
         // searching first '1'
         if(tmp[i] == '1'){
             k += k - 2; // num of 000 and 1 - 2 ('0' & '1')
 
             if(k == 0){ // decode 0
-                printf("0 ");
-                continue;
+                // printf("0 ");
+
+                // int zero = 0;
+                // for(zero = 0; i < strlen(tmp)-1; zero++){
+                //     // encoded[zero] = encoded[zero+1];
+                // }
+                // encoded[zero] = '\0';
+                return 0;
+
+                // printf("0 ");
+                // continue;
             }
 
             for(int j = i; j < k; j++){
@@ -199,9 +210,24 @@ void decode_f2(char *encoded){
                 f2_d[m] = tmp[m+k];
             }
             f2_d[bin_mod - 1] = '\0';
-            printf("%d ", decode_bint(f2_d));
-            
+                        
             strcpy(tmp, tmp + k + bin_mod - 1);
+            // for stackofbooks lab2
+            #if 1
+                //encoded = tmp;
+                for(int i = 0; i < k + bin_mod - 1; i++){
+                    encoded[i] = tmp[i];
+                }
+                encoded[k+bin_mod] = '\0';
+                // strcpy(tmp, tmp + k + bin_mod - 1);
+                int ans = decode_bint(f2_d);
+                // printf("ans = %d %s\n", ans, encoded);
+                
+                free(f2_d);
+
+                return ans;
+
+            #endif
 
             k = 0;
             i = -1;

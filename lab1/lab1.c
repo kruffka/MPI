@@ -242,7 +242,6 @@ void main(int argc, char *argv[]){
     printf("Encoded str = %s\n", str);
 
     printf("Decoding now...\n");
-
     decode_f2(str);
 
     printf("\n");
