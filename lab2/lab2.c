@@ -57,7 +57,7 @@ void main(void){
         exit(0);
     }
 
-    /* 0100 1101 -> 10110010 перевернуть и делать операции в битовой монжо было б, а не в строке, так как нули теперь значащие будут справа*/
+    /* 0100 1101 -> 10110010 перевернуть и делать операции в битовой можно было б, а не в строке, так как нули теперь значащие будут справа*/
 
     int byte;
     uint8_t code = 0;
@@ -140,11 +140,11 @@ void main(void){
 
     char *str = "abcdefghijklmnopqrstuvwxyz";
     char str_byte[] = "01234567";
-    char big_str[1000000]; // fixme
-    int code_arr[1000000] = {0}; // fixme
+    char big_str[100];
+    int code_arr[1000000] = {0};
     int big_len = 0;
     int len = 0;
-
+    int s = 0;
     while ((byte = getc(file_r)) != EOF) {
         
         str = bin(byte);
@@ -159,40 +159,40 @@ void main(void){
         }
         str_byte[8] = '\0';
 
-        printf("bin(%x) = %s %s\n", byte, str_byte, str);
+        // printf("bin(%x) = %s %s\n", byte, str_byte, str);
         
         strcpy(big_str + big_len, str_byte);
         big_len += 8;
 
+        // printf("big = %s\n", big_str);
+        if(big_len >= 15){
+            code_arr[s] = decode_f2(&big_str[0]);
+            // printf("code_arr[%d] = %d;\n", s, code_arr[s]);
+            s++;
+       
+     big_len = strlen(big_str);
+        }
         // break;
 
     }
 
-
-    printf("tmp_str %s\n", tmp_str);
-    printf("big_str %s\n", big_str);
-    
-    i = 0;
-    while(big_str[0] != NULL){
-        // printf("%d", strlen(big_str));
-
-        // printf("big_str = %s\n", big_str);
-        code_arr[i] = decode_f2(&big_str[0]);
-        // printf("decode_f2 code %d\n", code_arr[i]); 
-
-    
-        if(code_arr[i] == -1)
-            break;
-        i++;
-
+    // remainder from two byte
+    // if(big_len > 1){
+    while(1){
+        
+        code_arr[s] = decode_f2(&big_str[0]);
+        // printf("big = %s\n", big_str);
+        // printf("code_arr[%d] = %d;\n", s, code_arr[s]);
+        if(code_arr[s] == -1) break;
+        s++;
+        big_len = strlen(big_str);
     }
-
     
     fclose(file_r);
 
     printf("stack of books unzip now\n");
 
-    for(int j = i - 1; j >= 0; j--){
+    for(int j = s - 1; j >= 0; j--){
         // printf("ans = %d\n", unzipStackOfBooks(code_arr[j]));
         code_arr[j] = unzipStackOfBooks(code_arr[j]);
         // printf("code_arr[%d] = %d; unzip = %d\n", j, code_arr[j], unzipStackOfBooks(code_arr[j]));
@@ -200,57 +200,14 @@ void main(void){
 
     file_w = fopen(unzip, "wb");
 
-    for(int j = 0; j < i; j++){
+    for(int j = 0; j < s; j++){
         fprintf(file_w, "%c", code_arr[j]);
     }
 
     fclose(file_w);
-            // char da[16] = "000100010";
-            // printf("f2 = %d\n", decode_f2(f2(1)));
-            // printf("df2 = %d\n", decode_f2(&da[0]));
 
-    // while ((byte = getc(file_r)) != EOF) {
-
-    //         str = bin(byte);
-    //         len = strlen(str);
-            
-    //         for(i = len, hex = 0; i >= 0; i--) {
-    //             hex |= (str[i - 1] & 1) << (len-i);
-    //         }
-    //         fprintf(file_w, "%c", hex);
-            
-    //         printf("str %s hex = %x\n", str, hex);
-
-    // }
-
-    // free(str);
-    // fclose(file_r);
-    // fclose(file_w);
-
-    // file_w = fopen(, "w"); 
-
-
-    // fclose(file_r);
-
-
-    // for(i = 0; i < 32; i++)
-    //     printf("f2(%d) %s\n", i, f2(i));
-    
-    // file_r = fopen(books, "rb");
-    // while ((byte = getc(file_r)) != EOF) {
-
-    //     // code = stackOfBooks(byte);
-    //     printf("ch[%d] = %x\n", i, byte);
-    //     // fprintf(file_w, "%s", f2(code));
-    //     i++;
-    // }
-    //debug
-    // for(i = 0; i < 256; i++){
-    //     code = stackOfBooks(i);
-    //     printf("ch[%d] = %d code %d\ndone\n", i, i, code);
-    // }
     
     printf("Done\n");
-   
+       
 
 }

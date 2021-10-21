@@ -194,8 +194,8 @@ int decode_f2(char *encoded){
                 }
                 // encoded += 1;
                 encoded[strlen(tmp)-1] = '\0';
-                free(tmp);
-                free(f2_d);
+                // free(tmp);
+                // free(f2_d);
                 return 0;
 
                 // printf("0 ");
@@ -217,6 +217,7 @@ int decode_f2(char *encoded){
             strcpy(tmp, tmp + k + bin_mod - 1);
             // for stackofbooks lab2
             #if 1
+            
                 //encoded = tmp;
                 for(int i = 0; i < strlen(tmp); i++){
                     encoded[i] = tmp[i];
