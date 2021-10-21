@@ -167,7 +167,7 @@ void main(void){
         // printf("big = %s\n", big_str);
         if(big_len >= 15){
             code_arr[s] = decode_f2(&big_str[0]);
-            // printf("code_arr[%d] = %d;\n", s, code_arr[s]);
+            printf("code_arr[%d] = %d;\n", s, code_arr[s]);
             s++;
        
      big_len = strlen(big_str);
@@ -182,7 +182,7 @@ void main(void){
         
         code_arr[s] = decode_f2(&big_str[0]);
         // printf("big = %s\n", big_str);
-        // printf("code_arr[%d] = %d;\n", s, code_arr[s]);
+        printf("code_arr[%d] = %d;\n", s, code_arr[s]);
         if(code_arr[s] == -1) break;
         s++;
         big_len = strlen(big_str);
