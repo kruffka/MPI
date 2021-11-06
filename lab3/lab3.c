@@ -7,17 +7,17 @@
 // sort by second to last symbol
 int cmp(const void **a, const void **b) {
     
-    int len = strlen(a);
+    int len = strlen(*a) - 2;
     // printf("a = %p a = %s b = %p %s\n", *a, *a, b, *b); // +56 +48
-    // printf("len = %d\n", len);
+    printf("len = %d\n", len+2);
 
     // char * const *aa = a;
     // char *const *bb = b;
-    char aa = *(const char *)(*(a)+len-1);
-    char bb = *(const char *)(*(b)+len-1);
+    char aa = *(const char *)(*(a)+len);
+    char bb = *(const char *)(*(b)+len);
     
     // printf("aa = %c bb = %c\n", aa, bb);
-    int i = len - 2;
+    int i = len - 1;
     while(aa == bb && i > 0){
         aa = *(const char *)(*(a)+i);
         bb = *(const char *)(*(b)+i);
@@ -101,7 +101,7 @@ void main(void){
        printf("%s\n", str[i]);
 
     }
-    
+
     int **arr1 = (int **)malloc(size*sizeof(int *)); // arr 1 and output
     int **arr2 = (int **)malloc(size*sizeof(int *)); // input and arr 2
 
