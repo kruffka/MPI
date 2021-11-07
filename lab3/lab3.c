@@ -119,7 +119,7 @@ void main(void){
 
     }
 
-    // calculate forward convertion code (first symbol of orig in last column of strings)
+    // calculate forward convertion code (first symbol of orig in last column of s)
     for(i = 0; i < size; i++){
         if(str[i][size-1] == res_code){
             res_code = i;
@@ -135,6 +135,13 @@ void main(void){
     }
     printf(" %d\n", res_code);
 
+    FILE *file_w = fopen("sorted.txt", "w");
+
+    for(i = 0; i < size; i++){
+        fprintf(file_w, "%c", arr1[i][0]);
+    }
+
+    fclose(file_w);
 
     // inverse convertion
     for(i = 0; i < size; i++){
