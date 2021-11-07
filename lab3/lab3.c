@@ -120,7 +120,7 @@ void main(void){
     }
 
     // calculate forward convertion code (first symbol of orig in last column of s)
-    for(i = 0; i < size; i++){
+    for(i = size - 1; i > 0; i--){
         if(str[i][size-1] == res_code){
             res_code = i;
             break;
