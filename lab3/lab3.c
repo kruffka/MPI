@@ -9,7 +9,7 @@ int cmp(const void **a, const void **b) {
     
     int len = strlen(*a) - 2;
     // printf("a = %p a = %s b = %p %s\n", *a, *a, b, *b); // +56 +48
-    printf("len = %d\n", len+2);
+    // printf("len = %d\n", len+2);
 
     // char * const *aa = a;
     // char *const *bb = b;
@@ -18,14 +18,14 @@ int cmp(const void **a, const void **b) {
     
     // printf("aa = %c bb = %c\n", aa, bb);
     int i = len - 1;
-    while(aa == bb && i > 0){
+    while(aa == bb && i >= 0){
         aa = *(const char *)(*(a)+i);
         bb = *(const char *)(*(b)+i);
         i--;
     }
 
-    return aa > bb ? 1 : -1; 
-    // return aa > bb ? 1 : aa < bb ? -1 : 0;
+    // return aa > bb ? 1 : -1; 
+    return aa > bb ? 1 : aa < bb ? -1 : 0;
 
 }
 
@@ -60,7 +60,7 @@ void main(void){
     char **str = (char **)malloc(size*sizeof(char *));
     
     for(i = 0; i < size; i++){
-        str[i] = (char *)malloc(size);
+        str[i] = (char *)malloc(size*sizeof(char));
     }
 
     FILE *file;
@@ -77,10 +77,9 @@ void main(void){
     // first symb
     int res_code = str[0][0];
 
-
     fclose(file);
 
-    printf("0 %s\n", str[0]);
+    printf("[0] %s\n", str[0]);
 
     for(i = 1; i < size; i++){
         strcpy(str[i], str[i-1] + 1);
@@ -101,7 +100,7 @@ void main(void){
        printf("%s\n", str[i]);
 
     }
-
+    
     int **arr1 = (int **)malloc(size*sizeof(int *)); // arr 1 and output
     int **arr2 = (int **)malloc(size*sizeof(int *)); // input and arr 2
 
@@ -120,12 +119,15 @@ void main(void){
 
     }
 
+    // calculate forward convertion code (first symbol of orig in last column of strings)
     for(i = 0; i < size; i++){
-        if(arr1[i][0] == res_code){
+        if(str[i][size-1] == res_code){
             res_code = i;
             break;
         }
     }
+
+
     // endo of forward transform
     printf("res (input) => ");
     for(i = 0; i < size; i++){
@@ -146,7 +148,7 @@ void main(void){
         printf("%c %d\n", arr1[i][0], arr1[i][1]);
     }
 
-    printf("Second array\n");
+    printf("Second array (res_code %d)\n", res_code);
     for(i = 0; i < size; i++){
         arr2[arr1[i][1]][0] = arr1[i][0];   
         arr2[arr1[i][1]][1] = i;
