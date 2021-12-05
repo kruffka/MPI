@@ -6,6 +6,13 @@
 #define N0 54
 #define BYTES_PER_PIXEL 3
 
+int H[4][15] = {
+    {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
+    {0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1},
+    {0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1},
+    {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1}    
+};
+
 void LSB_R(char *img, char *msg, int R, int bytes_to_encode) {
 
     printf("In every byte of every R(%d) pixel lsb is taken\n", R);
@@ -62,7 +69,7 @@ void LSB_M(char *img, char *msg, int R, int bytes_to_encode){
 
 }
 
-void Hamming(char *image, char *message) {
+void Hamming(char *img, char *msg, int R) {
 
 
 
@@ -133,7 +140,7 @@ void main(int argc, char *argv[]) {
 
     case '3':
         printf("Hamming\n");
-        // Hamming(image, N, message);
+        Hamming(image, message, R);
 
         break;
     
