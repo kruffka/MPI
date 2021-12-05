@@ -15,14 +15,49 @@ void LSB_R(char *img, char *msg, int R, int bytes_to_encode) {
     for(int l = N0; l < N0 + bytes_to_encode; l += BYTES_PER_PIXEL*8*R) {
         for(int pixelbyte = 0; pixelbyte < BYTES_PER_PIXEL; pixelbyte++) {
             // printf("%d ", l + pixelbyte*8);
+            printf("%d ", ((char *)&img[0])[l + pixelbyte*8] & 1);
             ((char *)&img[0])[l + pixelbyte*8] &= 0xFFFE | (msg[bit>>3]>>(bit&7))&1;
+            printf("%d\n", ((char *)&img[0])[l + pixelbyte*8] & 1);
+        
             bit++;
         }
     }
 
 }
 
-void LSB_M(char *image, char *message) {
+void LSB_M(char *img, char *msg, int R, int bytes_to_encode){
+    
+    printf("In every byte of every R(%d) pixel lsb is taken\n", R);
+
+    int msg_size = strlen(msg);
+    int bit = 0;
+    for(int l = N0; l < N0 + bytes_to_encode; l += BYTES_PER_PIXEL*8*R) {
+        for(int pixelbyte = 0; pixelbyte < BYTES_PER_PIXEL; pixelbyte++) {
+
+            if(((char *)&img[0])[l + pixelbyte*8] == 0 || ((char *)&img[0])[l + pixelbyte*8] == -1) {
+                // printf("%d 0000 or 255\n", bit);
+                ((char *)&img[0])[l + pixelbyte*8] = ((char *)&img[0])[l + pixelbyte*8] & 0xFFFE | (msg[bit>>3]>>(bit&7))&1;
+
+                bit++;
+                continue;
+            }
+
+            if(((((char *)&img[0])[l + pixelbyte*8] & 1) - (msg[bit>>3]>>(bit&7))&1) == 0){
+                // printf("%d equal\n", bit);
+                // do nothing
+
+            } else {
+                // printf("%d not equal\n", bit);
+
+                // xor
+                ((char *)&img[0])[l + pixelbyte*8] = (((char *)&img[0])[l + pixelbyte*8] & 0xFFFE) ^ 1;
+
+
+            }
+            
+            bit++;
+        }
+    }
 
 
 }
@@ -41,7 +76,6 @@ void main(int argc, char *argv[]) {
         printf("Not enough arguments, 1 - LSB-R; 2 - LSB-M; 3 - Hamming\n");
         exit(0);
     }
-
 
     char *image;
     // size of file and code rate 
@@ -92,8 +126,8 @@ void main(int argc, char *argv[]) {
         break;
 
     case '2':
-        // printf("LSB-M\n");
-        // LSB_M(image, N, message);
+        printf("LSB-M\n");
+        LSB_M(image, message, R, bytes_to_encode);
 
         break;
 
