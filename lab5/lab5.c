@@ -17,7 +17,6 @@ void LSB_R(char *img, char *msg, int R, int bytes_to_encode) {
 
     printf("In every byte of every R(%d) pixel lsb is taken\n", R);
 
-    int msg_size = strlen(msg);
     int bit = 0;
     for(int l = N0; l < N0 + bytes_to_encode; l += BYTES_PER_PIXEL*8*R) {
         for(int pixelbyte = 0; pixelbyte < BYTES_PER_PIXEL; pixelbyte++) {
@@ -36,7 +35,6 @@ void LSB_M(char *img, char *msg, int R, int bytes_to_encode){
     
     printf("In every byte of every R(%d) pixel lsb is taken\n", R);
 
-    int msg_size = strlen(msg);
     int bit = 0;
     for(int l = N0; l < N0 + bytes_to_encode; l += BYTES_PER_PIXEL*8*R) {
         for(int pixelbyte = 0; pixelbyte < BYTES_PER_PIXEL; pixelbyte++) {
@@ -71,6 +69,52 @@ void LSB_M(char *img, char *msg, int R, int bytes_to_encode){
 
 void Hamming(char *img, char *msg, int R) {
 
+    int msg_ptr = 0, i;
+    int msg_size = strlen(msg)*8;
+    int H_ct[4] = {0};
+    int s[4] = {0};
+
+    for(int byte = N0; byte < N0 + msg_size; byte++){
+        
+        // 4*2 bits in 1 byte
+        for(int msg_half = 0; msg_half < 2; msg_half++){
+            for(int b = 0; b < 15; b++){
+                H_ct[0] |= H[0][b] & (img[b]&1);
+                H_ct[1] |= H[1][b] & (img[b]&1);
+                H_ct[2] |= H[2][b] & (img[b]&1);
+                H_ct[3] |= H[3][b] & (img[b]&1);
+                // H_ct[l/4] = H_ct[l/4] + 
+            }
+            
+        // printf("%d\n%d\n%d\n%d\n", H_ct[0], H_ct[1], H_ct[2], H_ct[3]);
+
+        i = 0;
+        for(int m = 0; m < 4; m++) {
+            s[m] = H_ct[m] ^ ((((char *)&msg[0])[byte] >> msg_ptr) & 1);
+            // printf("%d ", (((char *)&msg[0])[msg_half] >> msg_ptr) & 1);
+            msg_ptr++;
+            i += s[m]*pow(2, m);
+        }
+
+        // printf("%d\n%d\n%d\n%d\n%d", s[0], s[1], s[2], s[3], i);
+
+        i += byte;
+        // printf("%d\n", img[N0 + i]);
+        img[N0 + i] = img[N0 + i] & 0xFFFE | (~img[N0 + i])&1;
+        // printf("%d\n", img[N0 + i]);
+        }
+
+        msg_ptr = 0;
+        for(int j = 0; j < 4; j++){
+            H_ct[j] = 0;
+            s[j] = 0;
+
+        }
+
+        // printf("%d: %d\n", byte, img[i]&1);
+        
+        
+    }
 
 
 }
@@ -98,7 +142,7 @@ void main(int argc, char *argv[]) {
     int msg_size = strlen(message)*8;
 
     struct stat st;
-    FILE *fp = fopen ("imgs/test.bmp", "rb+");
+    FILE *fp = fopen ("imgs/PU24-4.bmp", "rb+");
 
     if(fp == NULL) {
         printf("Error opening file\n");
