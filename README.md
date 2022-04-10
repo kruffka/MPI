@@ -1,4 +1,5 @@
-# MPI
-lab1
+# MPI (Modern Problems of Informatics)
 
-repository name was stolen from Excla1mer (Seryoga)
+semestr1 - c code
+semestr2 - python
+
